@@ -5,11 +5,13 @@
 #include "WlEglThread.h"
 
 WlEglThread::WlEglThread() {
-
+    pthread_mutex_init(&pthread_mutex, NULL);
+    pthread_cond_init(&pthread_cond, NULL);
 }
 
 WlEglThread::~WlEglThread() {
-
+    pthread_mutex_destroy(&pthread_mutex);
+    pthread_cond_destroy(&pthread_cond);
 }
 
 
@@ -49,7 +51,18 @@ void * eglThreadImpl(void *context)
                 wlEglThread->onDraw(wlEglThread->onDrawCtx);
                 wlEglHelper->swapBuffers();
             }
-            usleep(1000000 / 60);
+
+            if(wlEglThread->renderType == OPENGL_RENDER_AUTO)
+            {
+                usleep(1000000 / 60);
+            }
+            else
+            {
+                pthread_mutex_lock(&wlEglThread->pthread_mutex);
+                pthread_cond_wait(&wlEglThread->pthread_cond, &wlEglThread->pthread_mutex);//会先解锁
+                pthread_mutex_unlock(&wlEglThread->pthread_mutex);
+            }
+
             if(wlEglThread->isExit)
             {
                 break;
@@ -91,4 +104,14 @@ void WlEglThread::callBackOnChange(OnChange onChange, void *ctx) {
 void WlEglThread::callBackOnDraw(OnDraw onDraw, void *ctx) {
     this->onDraw = onDraw;
     this->onDrawCtx = ctx;
+}
+
+void WlEglThread::setRenderType(int renderType) {
+    this->renderType = renderType;
+}
+
+void WlEglThread::notifyRender() {
+    pthread_mutex_lock(&pthread_mutex);
+    pthread_cond_signal(&pthread_cond);
+    pthread_mutex_unlock(&pthread_mutex);
 }

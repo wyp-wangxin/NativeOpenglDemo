@@ -39,6 +39,8 @@ Java_com_wyp_opengl_NativeOpengl_surfaceCreate(JNIEnv *env, jobject instance, jo
     LOGE("Java_com_wyp_opengl_NativeOpengl_surfaceCreate 0");
     nativeWindow = ANativeWindow_fromSurface(env, surface);
     wlEglThread = new WlEglThread();
+    //设置渲染方式
+    wlEglThread->setRenderType(OPENGL_RENDER_HANDLE);
     //设置回调函数
     wlEglThread->callBackOnCreate(callback_SurfaceCrete, wlEglThread);
     wlEglThread->callBackOnChange(callback_SurfacChange, wlEglThread);
