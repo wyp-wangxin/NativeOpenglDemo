@@ -1,6 +1,6 @@
 #include <jni.h>
 #include <string>
-#include "egl/WlEglHelper.h"
+
 #include "android/native_window.h"
 #include "android/native_window_jni.h"
 #include "egl/WlEglThread.h"
@@ -18,6 +18,18 @@ const char *fragment = "precision mediump float;\n"
         "    gl_FragColor = vec4(1f,0f,0f,1f);\n"
         "}";
 
+int program;
+GLint vPosition;
+//定义定点坐标
+float vertexs[] = {
+        -1,-1,
+        1,-1,
+        0,1,
+
+};
+
+
+
 ANativeWindow *nativeWindow = NULL;
 WlEglThread *wlEglThread = NULL;
 
@@ -25,6 +37,11 @@ void callback_SurfaceCrete(void *ctx)
 {
     LOGD("callback_SurfaceCrete");
     WlEglThread *wlEglThread = static_cast<WlEglThread *>(ctx);
+
+    program = createProgrm(vertex, fragment);
+    LOGD("opengl program is %d", program);
+    vPosition = glGetAttribLocation(program, "a_position");//得到属性，给这个属性传值就行了
+
 }
 
 void callback_SurfacChange(int w, int h, void *ctx)
@@ -38,8 +55,26 @@ void callback_SurfaceDraw(void *ctx)
 {
     LOGD("callback_SurfaceDraw");
     WlEglThread *wlEglThread = static_cast<WlEglThread *>(ctx);
-    glClearColor(1.0f, 0.0f, 0.0f, 1.0f);//设置填充颜色
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);//设置填充颜色
     glClear(GL_COLOR_BUFFER_BIT);
+
+    glUseProgram(program);
+
+    glEnableVertexAttribArray(vPosition);//让定点的数据可用
+   /* glVertexAttribPointer(vPosition,
+                          2,//一个点是由是x,y两个FLOAT表示的
+                          GL_FLOAT,//类型
+                          false,//不用归一化，因为我们的坐标本身就是归一化的
+                          8,//跨度，一个点占用8个字节
+                          vertexs
+    );
+    glDrawArrays(GL_TRIANGLES, //绘制三角形
+                 0, //vertexs 从0下标开始
+                 3//vertexs 长度是3
+    );*/
+    glVertexAttribPointer(vPosition, 2, GL_FLOAT, false, 8, vertexs);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+    LOGD("callback_SurfaceDraw 2222");
 
 }
 
@@ -48,7 +83,7 @@ JNIEXPORT void JNICALL
 Java_com_wyp_opengl_NativeOpengl_surfaceCreate(JNIEnv *env, jobject instance, jobject surface) {
 
     // TODO
-    LOGE("Java_com_wyp_opengl_NativeOpengl_surfaceCreate 0");
+   // LOGE("Java_com_wyp_opengl_NativeOpengl_surfaceCreate 0");
     nativeWindow = ANativeWindow_fromSurface(env, surface);
     wlEglThread = new WlEglThread();
     //设置渲染方式
@@ -59,9 +94,6 @@ Java_com_wyp_opengl_NativeOpengl_surfaceCreate(JNIEnv *env, jobject instance, jo
     wlEglThread->callBackOnDraw(callback_SurfaceDraw, wlEglThread);
 
     wlEglThread->onSurfaceCreate(nativeWindow);
-
-    int program = createProgrm(vertex, fragment);
-    LOGD("opengl program is %d", program);
 
 }
 
@@ -75,5 +107,8 @@ Java_com_wyp_opengl_NativeOpengl_surfaceChange(JNIEnv *env, jobject instance, ji
     if(wlEglThread != NULL)
     {
         wlEglThread->onSurfaceChange(width, height);
+
+        usleep(1000000);
+        wlEglThread->notifyRender();
     }
 }

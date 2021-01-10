@@ -35,18 +35,14 @@ public class WlSurfaceView extends SurfaceView implements SurfaceHolder.Callback
 
     @Override
     public void surfaceCreated(SurfaceHolder surfaceHolder) {
-        Log.d("wwxx","surfaceCreated 000");
         if(nativeOpengl != null)
         {
-            Log.d("wwxx","surfaceCreated 11");
             nativeOpengl.surfaceCreate(surfaceHolder.getSurface());
-            Log.d("wwxx","surfaceCreated 22");
         }
     }
 
     @Override
     public void surfaceChanged(SurfaceHolder surfaceHolder, int format, int width, int height) {
-        Log.d("wwxx","surfaceChanged 22");
         if(nativeOpengl != null)
         {
             nativeOpengl.surfaceChange(width, height);

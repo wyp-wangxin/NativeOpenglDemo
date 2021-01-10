@@ -8,7 +8,7 @@
 
 static int loadShaders(int shaderType, const char *code)
 {
-    //1、创建shader（着色器：顶点或片元）
+   /* //1、创建shader（着色器：顶点或片元）
     int shader = glCreateShader(shaderType);
     //2、加载shader源码并编译shader
     glShaderSource(shader,
@@ -18,12 +18,16 @@ static int loadShaders(int shaderType, const char *code)
     );
     //并编译shader
     glCompileShader(shader);
+    return  shader;*/
+    int shader = glCreateShader(shaderType);
+    glShaderSource(shader, 1, &code, 0);
+    glCompileShader(shader);
     return  shader;
 }
 
 static int createProgrm(const char *vertex , const char * fragment)
 {
-    int vertexShader = loadShaders(GL_VERTEX_SHADER, vertex);//创建定点的shader
+   /* int vertexShader = loadShaders(GL_VERTEX_SHADER, vertex);//创建定点的shader
     int fragmentShader = loadShaders(GL_FRAGMENT_SHADER, fragment);//创建纹理的shader
    //3、创建一个渲染程序
     int program = glCreateProgram();
@@ -31,6 +35,13 @@ static int createProgrm(const char *vertex , const char * fragment)
     glAttachShader(program, vertexShader);
     glAttachShader(program, fragmentShader);
     //5、链接源程序
+    glLinkProgram(program);
+    return program;*/
+    int vertexShader = loadShaders(GL_VERTEX_SHADER, vertex);
+    int fragmentShader = loadShaders(GL_FRAGMENT_SHADER, fragment);
+    int program = glCreateProgram();
+    glAttachShader(program, vertexShader);
+    glAttachShader(program, fragmentShader);
     glLinkProgram(program);
     return program;
 }

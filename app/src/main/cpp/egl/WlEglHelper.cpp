@@ -32,7 +32,7 @@ int WlEglHelper::initEgl(EGLNativeWindowType window) {
     }
 
     //3、设置显示设备的属性
-    const EGLint attribs[] = {
+   /* const EGLint attribs[] = {
             EGL_RED_SIZE, 8,   //颜色
             EGL_GREEN_SIZE, 8, //颜色
             EGL_BLUE_SIZE, 8, //颜色
@@ -42,6 +42,7 @@ int WlEglHelper::initEgl(EGLNativeWindowType window) {
             EGL_RENDERABLE_TYPE, EGL_OPENGL_ES2_BIT,//版本
             EGL_NONE  //表示结尾
     };
+
 
     EGLint num_config;
     int res = eglChooseConfig(mEglDisplay,
@@ -53,6 +54,23 @@ int WlEglHelper::initEgl(EGLNativeWindowType window) {
     {
         LOGE("eglChooseConfig  error 1");
         return -1;
+    }*/
+    const EGLint attribs[] = {
+            EGL_RED_SIZE, 8,
+            EGL_GREEN_SIZE, 8,
+            EGL_BLUE_SIZE, 8,
+            EGL_ALPHA_SIZE, 8,
+            EGL_DEPTH_SIZE, 8,
+            EGL_STENCIL_SIZE, 8,
+            EGL_RENDERABLE_TYPE, EGL_OPENGL_ES2_BIT,
+            EGL_NONE
+    };
+
+    EGLint num_config;
+    if(!eglChooseConfig(mEglDisplay, attribs, NULL, 1, &num_config))
+    {
+        LOGE("eglChooseConfig  error 1");
+        return -1;
     }
 
     //4、从系统中获取对应属性的配置
@@ -61,9 +79,9 @@ int WlEglHelper::initEgl(EGLNativeWindowType window) {
         LOGE("eglChooseConfig  error 2");
         return -1;
     }
-    LOGD("eglthread call surfaceCreate 333")
+
     //5、创建EglContext
-    int attrib_list[] = {
+   /* int attrib_list[] = {
             EGL_CONTEXT_CLIENT_VERSION, 2,
             EGL_NONE
     };
@@ -71,29 +89,34 @@ int WlEglHelper::initEgl(EGLNativeWindowType window) {
                                    mEglConfig,
                                    EGL_NO_CONTEXT, //共享的EglContext，这里没有.
                                    attrib_list //版本信息
-    );
+    );*/
+
+    int attrib_list[] = {
+            EGL_CONTEXT_CLIENT_VERSION, 2,
+            EGL_NONE
+    };
+
+    mEglContext = eglCreateContext(mEglDisplay, mEglConfig, EGL_NO_CONTEXT, attrib_list);
     if(mEglContext == EGL_NO_CONTEXT)
     {
         LOGE("eglCreateContext  error");
         return -1;
     }
     //6、创建渲染的Surface
-    mEglSurface = eglCreateWindowSurface(mEglDisplay,
+    /*mEglSurface = eglCreateWindowSurface(mEglDisplay,
                                          mEglConfig,
                                          window,
                                          NULL//属性传空就好
-    );
+    );*/
+    mEglSurface = eglCreateWindowSurface(mEglDisplay, mEglConfig, window, NULL);
     if(mEglSurface == EGL_NO_SURFACE)
     {
         LOGE("eglCreateWindowSurface  error");
         return -1;
     }
-    //7、绑定EglContext和Surface到显示设备中
-    res=eglMakeCurrent(mEglDisplay,
-                       mEglSurface, //draw
-                       mEglSurface, //read
-                       mEglContext);
-    if(!res)
+
+    //7、
+    if(!eglMakeCurrent(mEglDisplay, mEglSurface, mEglSurface, mEglContext))
     {
         LOGE("eglMakeCurrent  error");
         return -1;
