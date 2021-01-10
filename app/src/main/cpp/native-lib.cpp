@@ -4,7 +4,19 @@
 #include "android/native_window.h"
 #include "android/native_window_jni.h"
 #include "egl/WlEglThread.h"
+#include "shaderutil/WlShaderUtil.h"
 
+
+const char *vertex = "attribute vec4 a_position;\n"
+        "\n"
+        "void main(){\n"
+        "    gl_Position = a_position;\n"
+        "}";
+const char *fragment = "precision mediump float;\n"
+        "\n"
+        "void main(){\n"
+        "    gl_FragColor = vec4(1f,0f,0f,1f);\n"
+        "}";
 
 ANativeWindow *nativeWindow = NULL;
 WlEglThread *wlEglThread = NULL;
@@ -47,6 +59,9 @@ Java_com_wyp_opengl_NativeOpengl_surfaceCreate(JNIEnv *env, jobject instance, jo
     wlEglThread->callBackOnDraw(callback_SurfaceDraw, wlEglThread);
 
     wlEglThread->onSurfaceCreate(nativeWindow);
+
+    int program = createProgrm(vertex, fragment);
+    LOGD("opengl program is %d", program);
 
 }
 
