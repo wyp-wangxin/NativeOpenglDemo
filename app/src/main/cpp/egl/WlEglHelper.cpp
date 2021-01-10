@@ -61,7 +61,7 @@ int WlEglHelper::initEgl(EGLNativeWindowType window) {
         LOGE("eglChooseConfig  error 2");
         return -1;
     }
-
+    LOGD("eglthread call surfaceCreate 333")
     //5、创建EglContext
     int attrib_list[] = {
             EGL_CONTEXT_CLIENT_VERSION, 2,
@@ -77,7 +77,6 @@ int WlEglHelper::initEgl(EGLNativeWindowType window) {
         LOGE("eglCreateContext  error");
         return -1;
     }
-
     //6、创建渲染的Surface
     mEglSurface = eglCreateWindowSurface(mEglDisplay,
                                          mEglConfig,

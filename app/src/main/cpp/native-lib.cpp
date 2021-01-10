@@ -3,10 +3,11 @@
 #include "egl/WlEglHelper.h"
 #include "android/native_window.h"
 #include "android/native_window_jni.h"
-#include "GLES2/gl2.h"
+#include "egl/WlEglThread.h"
 
-WlEglHelper *wlEglHelper = NULL;
+
 ANativeWindow *nativeWindow = NULL;
+WlEglThread *wlEglThread = NULL;
 
 extern "C"
 JNIEXPORT void JNICALL
@@ -15,16 +16,20 @@ Java_com_wyp_opengl_NativeOpengl_surfaceCreate(JNIEnv *env, jobject instance, jo
     // TODO
     LOGE("Java_com_wyp_opengl_NativeOpengl_surfaceCreate 0");
     nativeWindow = ANativeWindow_fromSurface(env, surface);
+    wlEglThread = new WlEglThread();
+    wlEglThread->onSurfaceCreate(nativeWindow);
 
-    wlEglHelper = new WlEglHelper();
-    wlEglHelper->initEgl(nativeWindow);
+}
 
-    //opnegl
-    glViewport(0, 0, 720, 1280);//设置窗口大小
 
-    glClearColor(0.0f, 1.0f, 0.0f, 1.0f);//设置填充颜色
-    glClear(GL_COLOR_BUFFER_BIT);
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_wyp_opengl_NativeOpengl_surfaceChange(JNIEnv *env, jobject instance, jint width,
+                                               jint height) {
 
-    wlEglHelper->swapBuffers();
-
+    // TODO
+    if(wlEglThread != NULL)
+    {
+        wlEglThread->onSurfaceChange(width, height);
+    }
 }
