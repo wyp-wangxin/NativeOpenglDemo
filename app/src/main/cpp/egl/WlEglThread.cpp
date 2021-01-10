@@ -21,7 +21,6 @@ void * eglThreadImpl(void *context)
     {
         WlEglHelper *wlEglHelper = new WlEglHelper();
         wlEglHelper->initEgl((wlEglThread->nativeWindow));
-
         wlEglThread->isExit = false;
         while(true)
         {
@@ -29,13 +28,15 @@ void * eglThreadImpl(void *context)
             {
                 LOGD("eglthread call surfaceCreate");
                 wlEglThread->isCreate = false;
+                wlEglThread->onCreate(wlEglThread->onCreteCtx);
             }
 
             if(wlEglThread->isChange)
             {
                 LOGD("eglthread call surfaceChange");
                 wlEglThread->isChange = false;
-                glViewport(0, 0, wlEglThread->surfaceWidth, wlEglThread->surfaceHeight);//设置窗口大小
+                //glViewport(0, 0, wlEglThread->surfaceWidth, wlEglThread->surfaceHeight);//设置窗口大小
+                wlEglThread->onChange(wlEglThread->surfaceWidth, wlEglThread->surfaceHeight, wlEglThread->onChangeCtx);
                 wlEglThread->isStart = true;
             }
 
@@ -43,8 +44,9 @@ void * eglThreadImpl(void *context)
             LOGD("draw");
             if(wlEglThread->isStart)
             {
-                glClearColor(0.0f, 1.0f, 1.0f, 1.0f);//设置填充颜色
-                glClear(GL_COLOR_BUFFER_BIT);
+                //glClearColor(0.0f, 1.0f, 1.0f, 1.0f);//设置填充颜色
+                //glClear(GL_COLOR_BUFFER_BIT);
+                wlEglThread->onDraw(wlEglThread->onDrawCtx);
                 wlEglHelper->swapBuffers();
             }
             usleep(1000000 / 60);
@@ -61,20 +63,13 @@ void * eglThreadImpl(void *context)
 
 
 void WlEglThread::onSurfaceCreate(EGLNativeWindowType window) {
-    nativeWindow = window;
-    WlEglHelper *wlEglHelper = new WlEglHelper();
-    wlEglHelper->initEgl(nativeWindow);
-    glViewport(0, 0, 720, 1280);//设置窗口大小
-    glClearColor(0.0f, 1.0f, 1.0f, 1.0f);//设置填充颜色
-    glClear(GL_COLOR_BUFFER_BIT);
-    wlEglHelper->swapBuffers();
 
-  /*  if(eglThread == -1)
+    if(eglThread == -1)
     {
         isCreate = true;
         nativeWindow = window;
         pthread_create(&eglThread, NULL, eglThreadImpl, this);
-    }*/
+    }
 }
 
 void WlEglThread::onSurfaceChange(int width, int height) {
@@ -82,4 +77,18 @@ void WlEglThread::onSurfaceChange(int width, int height) {
     isChange = true;
     surfaceWidth = width;
     surfaceHeight = height;
+}
+void WlEglThread::callBackOnCreate(WlEglThread::OnCreate onCreate, void *ctx) {
+    this->onCreate = onCreate;
+    this->onCreteCtx = ctx;
+}
+
+void WlEglThread::callBackOnChange(OnChange onChange, void *ctx) {
+    this->onChange = onChange;
+    this->onChangeCtx = ctx;
+}
+
+void WlEglThread::callBackOnDraw(OnDraw onDraw, void *ctx) {
+    this->onDraw = onDraw;
+    this->onDrawCtx = ctx;
 }
