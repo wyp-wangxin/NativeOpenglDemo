@@ -5,14 +5,16 @@
 #include "android/native_window_jni.h"
 #include "egl/WlEglThread.h"
 #include "shaderutil/WlShaderUtil.h"
+#include "matrix/MatrixUtil.h"
 
 
 const char *vertex = "attribute vec4 v_Position;\n"
         "attribute vec2 f_Position;\n"
         "varying vec2 ft_Position;\n"
+        "uniform mat4 u_Matrix;\n"
         "void main() {\n"
         "    ft_Position = f_Position;\n"
-        "    gl_Position = v_Position;\n"
+        "    gl_Position = v_Position * u_Matrix;\n"
         "}";
 
 
@@ -28,7 +30,7 @@ GLint vPosition;
 GLint fPosition;
 GLint sampler;
 GLuint textureId;
-
+GLint u_matrix;
 
 int w;
 int h;
@@ -50,7 +52,8 @@ float fragments[] ={
         0,1,
         0,0
 };
-
+//定义矩阵
+float matrix[16];
 
 ANativeWindow *nativeWindow = NULL;
 WlEglThread *wlEglThread = NULL;
@@ -67,6 +70,10 @@ void callback_SurfaceCrete(void *ctx)
     vPosition = glGetAttribLocation(program, "v_Position");//顶点坐标
     fPosition = glGetAttribLocation(program, "f_Position");//纹理坐标
     sampler = glGetUniformLocation(program, "sTexture");//2D纹理
+    u_matrix = glGetUniformLocation(program, "u_Matrix");
+
+    initMatrix(matrix);
+    rotateMatrix(90,matrix);
 
     glGenTextures(1, &textureId);//2.1、创建纹理：
 
@@ -101,7 +108,8 @@ void callback_SurfaceDraw(void *ctx)
     glClear(GL_COLOR_BUFFER_BIT);
 
     glUseProgram(program);
-
+    glUniformMatrix4fv(u_matrix, 1,//表示只传递一个矩阵过来
+                       GL_FALSE, matrix);
    /* glEnableVertexAttribArray(vPosition);//让定点的数据可用
    /* glVertexAttribPointer(vPosition,
                           2,//一个点是由是x,y两个FLOAT表示的
