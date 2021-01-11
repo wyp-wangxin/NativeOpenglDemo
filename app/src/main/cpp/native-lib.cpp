@@ -22,10 +22,13 @@ int program;
 GLint vPosition;
 //定义定点坐标
 float vertexs[] = {
-        -1,-1,
+       -1,-1,
         1,-1,
-        0,1,
+        -1,1,
 
+       -1,1,
+       1,-1,
+       1,1
 };
 
 
@@ -73,7 +76,7 @@ void callback_SurfaceDraw(void *ctx)
                  3//vertexs 长度是3
     );*/
     glVertexAttribPointer(vPosition, 2, GL_FLOAT, false, 8, vertexs);
-    glDrawArrays(GL_TRIANGLES, 0, 3);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
     LOGD("callback_SurfaceDraw 2222");
 
 }
