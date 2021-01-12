@@ -19,7 +19,11 @@ add_library( # Sets the name of the library.
              # Provides a relative path to your source file(s).
              src/main/cpp/native-lib.cpp
              src/main/cpp/egl/WlEglHelper.cpp
-             src/main/cpp/egl/WlEglThread.cpp)
+             src/main/cpp/egl/WlEglThread.cpp
+             src/main/cpp/opengl/WlBaseOpengl.cpp
+             src/main/cpp/opengl/WlFilterOne.cpp
+             src/main/cpp/opengl/WlOpengl.cpp
+             )
 
 # Searches for a specified prebuilt library and stores the path as a
 # variable. Because CMake includes system libraries in the search path by

@@ -27,14 +27,19 @@ public class MainActivity extends AppCompatActivity {
         Log.d("wwxx","hhhhhhhh 1");
         mWlSurfaceView.setNativeOpengl(mNativeOpengl);
         Log.d("wwxx","hhhhhhhh 2");
+        mWlSurfaceView.setOnSurfaceListener(new WlSurfaceView.OnSurfaceListener() {
+            @Override
+            public void init() {
+                final Bitmap bitmap = BitmapFactory.decodeResource(getResources(),
+                        R.drawable.mingren);
+                ByteBuffer fcbuffer = ByteBuffer.allocate(bitmap.getHeight() * bitmap.getWidth() * 4);
+                bitmap.copyPixelsToBuffer(fcbuffer);
+                fcbuffer.flip();
+                byte[] pixels = fcbuffer.array();
+                mNativeOpengl.imgData(bitmap.getWidth(), bitmap.getHeight(), pixels.length, pixels);
+            }
+        });
 
-        final Bitmap bitmap = BitmapFactory.decodeResource(getResources(),
-                R.drawable.mingren);
-        ByteBuffer fcbuffer = ByteBuffer.allocate(bitmap.getHeight() * bitmap.getWidth() * 4);
-        bitmap.copyPixelsToBuffer(fcbuffer);
-        fcbuffer.flip();
-        byte[] pixels = fcbuffer.array();
-        mNativeOpengl.imgData(bitmap.getWidth(), bitmap.getHeight(), pixels.length, pixels);
     }
 
 }
