@@ -19,7 +19,7 @@ static void initMatrix(float *matrix)
     }
 }
 
-static void rotateMatrix(double angle, float *matrix)
+static void rotateMatrix(double angle, float *matrix)//旋转
 {
     angle = angle * (M_PI / 180.0); //转化为弧度
 
@@ -29,4 +29,12 @@ static void rotateMatrix(double angle, float *matrix)
     matrix[5] = cos(angle);
 
 }
+
+
+static void scaleMatrix(double scale, float *matrix)//缩放
+{
+    matrix[0] = scale;
+    matrix[5] = scale;
+}
+
 #endif //NATIVEOPENGLDEMO_MATRIXUTIL_H

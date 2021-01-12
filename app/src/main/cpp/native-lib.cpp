@@ -73,8 +73,8 @@ void callback_SurfaceCrete(void *ctx)
     u_matrix = glGetUniformLocation(program, "u_Matrix");
 
     initMatrix(matrix);
-    rotateMatrix(90,matrix);
-
+   // rotateMatrix(90,matrix);
+    scaleMatrix(0.5,matrix);//缩小为原来的二分之一
     glGenTextures(1, &textureId);//2.1、创建纹理：
 
     glBindTexture(GL_TEXTURE_2D, textureId);//2.2、绑定纹理：
