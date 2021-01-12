@@ -37,4 +37,11 @@ static void scaleMatrix(double scale, float *matrix)//缩放
     matrix[5] = scale;
 }
 
+static void transMatrix(double x, double y, float *matrix)//平移
+{
+    matrix[3] = x;
+    matrix[7] = y;
+}
+
+
 #endif //NATIVEOPENGLDEMO_MATRIXUTIL_H

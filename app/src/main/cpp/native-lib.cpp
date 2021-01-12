@@ -74,7 +74,9 @@ void callback_SurfaceCrete(void *ctx)
 
     initMatrix(matrix);
    // rotateMatrix(90,matrix);
-    scaleMatrix(0.5,matrix);//缩小为原来的二分之一
+   // scaleMatrix(0.5,matrix);//缩小为原来的二分之一
+    transMatrix(0.5,0,matrix);//理解：0.5 即是在x轴向右移动了四分一的位置，因为坐标系是归一画的，0.5刚好就是1/4
+
     glGenTextures(1, &textureId);//2.1、创建纹理：
 
     glBindTexture(GL_TEXTURE_2D, textureId);//2.2、绑定纹理：
