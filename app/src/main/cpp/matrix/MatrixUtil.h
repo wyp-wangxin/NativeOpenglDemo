@@ -43,5 +43,15 @@ static void transMatrix(double x, double y, float *matrix)//平移
     matrix[7] = y;
 }
 
+static void orthoM(float left, float right, float bottom, float top, float *matrix) //正交投影
+{
+    matrix[0] = 2 / (right - left);
+    matrix[3] = (right + left)/(right - left) * -1;
+    matrix[5] = 2 / (top - bottom);
+    matrix[7] = (top + bottom) / (top - bottom) * -1;
+    matrix[10] = 1;
+    matrix[11] = 1;
+}
+
 
 #endif //NATIVEOPENGLDEMO_MATRIXUTIL_H

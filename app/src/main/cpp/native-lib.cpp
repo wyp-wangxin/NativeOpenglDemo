@@ -95,11 +95,26 @@ void callback_SurfaceCrete(void *ctx)
 
 }
 
-void callback_SurfacChange(int w, int h, void *ctx)
+void callback_SurfacChange(int width, int height, void *ctx)
 {
     LOGD("callback_SurfacChange");
     WlEglThread *wlEglThread = static_cast<WlEglThread *>(ctx);
-    glViewport(0, 0, w, h);//设置窗口大小
+    glViewport(0, 0, width, height);//设置窗口大小
+
+    float screen_r = 1.0 * width / height;
+    float picture_r = 1.0 * w / h;
+
+    if(screen_r > picture_r) //图片宽度缩放
+    {
+        float r = width / (1.0 * height / h * w);
+        orthoM(-r, r, -1, 1, matrix);
+
+    } else{//图片高度缩放
+
+        float r = height / (1.0 * width / w * h);//意会意会
+        orthoM(-1, 1, -r, r, matrix);
+    }
+
 }
 
 void callback_SurfaceDraw(void *ctx)
