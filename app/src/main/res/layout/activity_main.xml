@@ -1,22 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="com.wyp.nativeopengldemo.MainActivity">
+    tools:context=".MainActivity">
 
     <com.wyp.opengl.WlSurfaceView
+        android:id="@+id/wlsurfaceview"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:id="@+id/wlsurfaceview"/>
-
-    <Button
+        android:layout_height="match_parent" />
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:onClick="changeFilter"
-        android:text="切换滤镜" />
+        android:orientation="vertical">
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_alignParentBottom="true"
+            android:onClick="changeFilter"
+            android:text="切换滤镜"/>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:onClick="changeTexture"
+            android:text="切换纹理"/>
+    </LinearLayout>
 
-</LinearLayout>
+</RelativeLayout>

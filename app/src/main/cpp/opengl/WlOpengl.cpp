@@ -150,6 +150,11 @@ void WlOpengl::setPilex(void *data, int width, int height, int length) {
 
     pic_width = width;
     pic_height = height;
+    if(pilex != NULL)
+    {
+        free(pilex);
+        pilex = NULL;
+    }
     pilex = malloc(length);
     memcpy(pilex, data, length);
     if(baseOpengl != NULL)
