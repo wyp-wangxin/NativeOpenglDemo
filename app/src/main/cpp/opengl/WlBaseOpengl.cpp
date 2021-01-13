@@ -54,3 +54,7 @@ void WlBaseOpengl::setPilex(void *data, int width, int height, int length) {
 void WlBaseOpengl::destorySorce() {
 
 }
+
+void WlBaseOpengl::setYuvData(void *y, void *u, void *v, int width, int height) {
+
+}

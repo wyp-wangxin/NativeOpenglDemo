@@ -11,6 +11,7 @@
 #include "WlBaseOpengl.h"
 #include "WlFilterOne.h"
 #include "WlFilterTwo.h"
+#include "WlFilterYUV.h"
 
 class WlOpengl {
 
@@ -34,6 +35,8 @@ public:
     void onDestorySurface();
 
     void setPilex(void *data, int width, int height, int length);
+
+    void setYuvData(void *y, void *u, void *v, int w, int h);
 
     void onChangeFilter();
 };

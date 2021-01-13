@@ -98,7 +98,8 @@ void WlOpengl::onCreateSurface(JNIEnv *env, jobject surface) {
     wlEglThread->callBackOnChangeFilter(callback_SurfaceChangeFilter, this);
     wlEglThread->callBAckOnDestroy(callback_SurfaceDestory, this);
 
-    baseOpengl = new WlFilterOne();
+    //baseOpengl = new WlFilterOne();
+	baseOpengl = new WlFilterYUV();
 
     wlEglThread->onSurfaceCreate(nativeWindow);
 
@@ -174,5 +175,17 @@ void WlOpengl::onChangeFilter() {
     if(wlEglThread != NULL)
     {
         wlEglThread->onSurfaceChangeFilter();
+    }
+}
+
+void WlOpengl::setYuvData(void *y, void *u, void *v, int w, int h) {
+
+    if(baseOpengl != NULL)
+    {
+        baseOpengl->setYuvData(y, u, v, w, h);
+    }
+    if(wlEglThread != NULL)
+    {
+        wlEglThread->notifyRender();
     }
 }
