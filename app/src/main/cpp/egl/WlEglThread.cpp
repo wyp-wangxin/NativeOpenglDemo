@@ -42,6 +42,12 @@ void * eglThreadImpl(void *context)
                 wlEglThread->isStart = true;
             }
 
+            if(wlEglThread->isChangeFilter)
+            {
+                wlEglThread->isChangeFilter = false;
+                wlEglThread->onChangeFilter(wlEglThread->surfaceWidth, wlEglThread->surfaceHeight, wlEglThread->onChangeFilterCtx);
+            }
+
             //
             LOGD("draw");
             if(wlEglThread->isStart)
@@ -65,6 +71,12 @@ void * eglThreadImpl(void *context)
 
             if(wlEglThread->isExit)
             {
+
+                wlEglThread->onDestroy(wlEglThread->onDestroyctx);
+
+                wlEglHelper->destoryEgl();
+                delete wlEglHelper;
+                wlEglHelper = NULL;
                 break;
             }
         }
@@ -123,4 +135,21 @@ void WlEglThread::destroy() {
     pthread_join(eglThread, NULL);
     nativeWindow = NULL;
     eglThread = -1;
+}
+
+void WlEglThread::callBackOnChangeFilter(WlEglThread::OnChangeFilter onChangeFilter, void *ctx) {
+    this->onChangeFilter = onChangeFilter;
+    this->onChangeFilterCtx = ctx;
+}
+
+void WlEglThread::onSurfaceChangeFilter() {
+
+    isChangeFilter = true;
+    notifyRender();
+
+}
+
+void WlEglThread::callBAckOnDestroy(WlEglThread::OnDestroy onDestroy, void *ctx) {
+    this->onDestroy = onDestroy;
+    this->onDestroyctx = ctx;
 }

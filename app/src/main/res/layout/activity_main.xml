@@ -4,11 +4,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="com.wyp.nativeopengldemo.MainActivity">
 
     <com.wyp.opengl.WlSurfaceView
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:id="@+id/wlsurfaceview"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:onClick="changeFilter"
+        android:text="切换滤镜" />
 
 </LinearLayout>

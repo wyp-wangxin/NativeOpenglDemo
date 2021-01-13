@@ -2,14 +2,14 @@
 // Created by yangw on 2019-3-31.
 //
 
-#ifndef NATIVEOPENGLDEMO_WLFILTERONE_H
-#define NATIVEOPENGLDEMO_WLFILTERONE_H
+#ifndef NATIVEOPENGLDEMO_WLFILTERTWO_H
+#define NATIVEOPENGLDEMO_WLFILTERTWO_H
 
 #include "WlBaseOpengl.h"
 #include "../matrix/MatrixUtil.h"
 #include "../shaderutil/WlShaderUtil.h"
 
-class WlFilterOne : public WlBaseOpengl{
+class WlFilterTwo  : public WlBaseOpengl{
 
 public:
     GLint vPosition;
@@ -25,8 +25,8 @@ public:
     float matrix[16];
 
 public:
-    WlFilterOne();
-    ~WlFilterOne();
+    WlFilterTwo();
+    ~WlFilterTwo();
 
     void onCreate();
 
@@ -45,4 +45,4 @@ public:
 };
 
 
-#endif //NATIVEOPENGLDEMO_WLFILTERONE_H
+#endif //NATIVEOPENGLDEMO_WLFILTERTWO_H

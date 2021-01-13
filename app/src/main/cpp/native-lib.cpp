@@ -53,4 +53,13 @@ Java_com_wyp_opengl_NativeOpengl_surfaceDestroy(JNIEnv *env, jobject instance) {
         wlOpengl = NULL;
     }
 
+}extern "C"
+JNIEXPORT void JNICALL
+Java_com_wyp_opengl_NativeOpengl_surfaceChangeFilter(JNIEnv *env, jobject instance) {
+
+    if(wlOpengl != NULL)
+    {
+        wlOpengl->onChangeFilter();
+    }
+
 }

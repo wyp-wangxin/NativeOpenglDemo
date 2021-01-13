@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 
 import com.wyp.opengl.NativeOpengl;
@@ -40,6 +41,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    public void changeFilter(View view) {
+
+        if(mNativeOpengl != null)
+        {
+            mNativeOpengl.surfaceChangeFilter();
+        }
     }
 
 }

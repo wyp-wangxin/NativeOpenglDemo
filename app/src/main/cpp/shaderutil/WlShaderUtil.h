@@ -25,7 +25,7 @@ static int loadShaders(int shaderType, const char *code)
     return  shader;
 }
 
-static int createProgrm(const char *vertex , const char * fragment)
+static int createProgrm(const char *vertex , const char * fragment, GLuint *v_shader, GLuint *f_shader)
 {
    /* int vertexShader = loadShaders(GL_VERTEX_SHADER, vertex);//创建定点的shader
     int fragmentShader = loadShaders(GL_FRAGMENT_SHADER, fragment);//创建纹理的shader
@@ -43,6 +43,10 @@ static int createProgrm(const char *vertex , const char * fragment)
     glAttachShader(program, vertexShader);
     glAttachShader(program, fragmentShader);
     glLinkProgram(program);
+
+    *v_shader = vertexShader;
+    *f_shader = fragmentShader;
+
     return program;
 }
 

@@ -2,17 +2,17 @@
 // Created by yangw on 2019-3-31.
 //
 
-#include "WlFilterOne.h"
+#include "WlFilterTwo.h"
 
-WlFilterOne::WlFilterOne() {
-
-}
-
-WlFilterOne::~WlFilterOne() {
+WlFilterTwo::WlFilterTwo() {
 
 }
 
-void WlFilterOne::onCreate() {
+WlFilterTwo::~WlFilterTwo() {
+
+}
+
+void WlFilterTwo::onCreate() {
 
     vertex = "attribute vec4 v_Position;\n"
              "attribute vec2 f_Position;\n"
@@ -26,7 +26,9 @@ void WlFilterOne::onCreate() {
                "varying vec2 ft_Position;\n"
                "uniform sampler2D sTexture;\n"
                "void main() {\n"
-               "    gl_FragColor=texture2D(sTexture, ft_Position);\n"
+               "     lowp vec4 textureColor = texture2D(sTexture, ft_Position);\n"
+               "     float gray = textureColor.r * 0.2125 + textureColor.g * 0.7154 + textureColor.b * 0.0721;\n"
+               "     gl_FragColor = vec4(gray, gray, gray, textureColor.w);\n"
                "}";
 
     program = createProgrm(vertex, fragment, &vShader, &fShader);
@@ -46,14 +48,16 @@ void WlFilterOne::onCreate() {
 
 }
 
-void WlFilterOne::onChange(int width, int height) {
+void WlFilterTwo::onChange(int width, int height) {
+
     surface_width = width;
     surface_height = height;
     glViewport(0, 0, width, height);
     setMatrix(width, height);
+
 }
 
-void WlFilterOne::draw() {
+void WlFilterTwo::draw() {
 
     glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
@@ -84,8 +88,7 @@ void WlFilterOne::draw() {
 
 }
 
-void WlFilterOne::setMatrix(int width, int height) {
-
+void WlFilterTwo::setMatrix(int width, int height) {
     initMatrix(matrix);
 
     float screen_r = 1.0 * width / height;
@@ -102,33 +105,35 @@ void WlFilterOne::setMatrix(int width, int height) {
         float r = height / (1.0 * width / w * h);
         orthoM(-1, 1, -r, r, matrix);
     }
-
 }
 
-void WlFilterOne::setPilex(void *data, int width, int height, int length) {
+void WlFilterTwo::setPilex(void *data, int width, int height, int length) {
 
     w = width;
     h = height;
     pixels = data;
+    LOGE("3 、width %d height %d %d %d", width, height, surface_width, surface_height);
+
     if(surface_height > 0 && surface_width > 0)
     {
         setMatrix(surface_width, surface_height);
     }
 
-
 }
 
-void WlFilterOne::destroy() {
-    LOGE("WlFilterOne::destroy")
+void WlFilterTwo::destroy() {
+
+    LOGE("WlFilterTwo::destroy")
     glDeleteTextures(1, &textureId);
     glDetachShader(program, vShader);
     glDetachShader(program, fShader);
     glDeleteShader(vShader);
     glDeleteShader(fShader);
     glDeleteProgram(program);
+
 }
 
-void WlFilterOne::destorySorce() {
+void WlFilterTwo::destorySorce() {
 
     if(pixels != NULL)
     {
